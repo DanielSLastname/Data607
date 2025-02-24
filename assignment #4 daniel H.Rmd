@@ -1,0 +1,69 @@
+---
+title: "Daniel Hanasab Assignment 4"
+output: html_document
+date: "2025-02-24"
+---
+
+```{r}
+
+# Load necessary libraries
+library(tidyverse)
+library(readr)
+
+# Step 1: Read CSV file
+arrival_data <- read_csv("arrival_delays.csv", col_names = FALSE)
+
+# Step 2: Assign proper column names
+colnames(arrival_data) <- c("Airline", "Status", "Los_Angeles", "Phoenix", "San_Diego", "San_Francisco", "Seattle", "Extra_Column")
+
+# Step 3: Remove the extra column ( I kept having an NA column which messed up my result)
+arrival_data <- arrival_data[, 1:7]  # Keep only valid columns
+
+# ✅ Step 4: Remove completely empty rows BEFORE pivoting
+arrival_data <- arrival_data %>%
+  filter(!if_all(everything(), is.na))  # Removes rows where ALL columns are NA
+
+# ✅ Step 5: Fix missing Airline names (ensuring delayed flights keep their airline)
+arrival_data <- arrival_data %>%
+  fill(Airline, .direction = "down")  # Fill missing airline names
+
+# Step 6: Convert to a tidy format (long format)
+tidy_data <- arrival_data %>%
+  pivot_longer(cols = c("Los_Angeles", "Phoenix", "San_Diego", "San_Francisco", "Seattle"),
+               names_to = "City",
+               values_to = "Flights") %>%
+  arrange(Airline, Status, City)
+
+# 7: Remove remaining NA rows after pivoting, I kept having issues so I added this
+tidy_data <- tidy_data %>%
+  filter(!is.na(Airline) & !is.na(Status) & !is.na(Flights))
+
+# Step 8: Convert Status and Flights to the correct format
+tidy_data <- tidy_data %>%
+  mutate(Status = tolower(Status),
+         Flights = as.numeric(Flights))  # Ensures Flights is numeric
+
+# Step 9: Print cleaned dataset just to check that my data is clean and
+print(tidy_data, n = 30)
+```
+
+## 
+```{r}
+#  1. Summary Statistics: Compare On-time vs Delayed Flights per Airline
+summary_stats <- tidy_data %>%
+  group_by(Airline, Status) %>%
+  summarise(Total_Flights = sum(Flights, na.rm = TRUE), .groups = "drop")
+
+# Print summary statistics
+print(summary_stats)
+
+#  2. Calculate Delay Percentage for Each Airline
+delay_percentage <- summary_stats %>%
+  pivot_wider(names_from = Status, values_from = Total_Flights, values_fill = list(Total_Flights = 0)) %>%
+  mutate(Delay_Percentage = delayed / (delayed + `on time`) * 100)
+
+# Print delay percentage table
+print(delay_percentage)
+
+#we can see that Alaska has a 14% delay percentage vs 11% for AM West
+```
