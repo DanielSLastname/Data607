@@ -1,0 +1,137 @@
+
+
+
+```{r}
+# Load Required Libraries
+library(dplyr)
+library(stringr)  # Load this to use str_trim()
+library(tidyr)
+library(readr)
+
+# Read the file
+txt_lines <- readLines("tournamentinfo.txt")
+
+```
+
+
+```{r}
+
+# Initialize an empty list to store player data
+players <- list()
+i <- 1  # Line index for iterating through the text file
+
+while (i <= length(txt_lines)) {
+  line <- str_trim(txt_lines[i])  # Trim whitespace from the current line
+  
+  # Check if the line contains a player's record (starts with a number followed by "|")
+  if (grepl("^\\d+ \\|", line)) {
+    
+    # Extract the player's name from the structured format
+    player_name <- str_trim(str_extract(line, "(?<=\\| ).*?(?= \\|)"))
+    
+    # Extract the total number of points the player scored in the tournament
+    total_points <- as.numeric(str_extract(line, "\\d+\\.\\d"))
+    
+    # Extract state, USCF ID, and pre-rating from the next line
+    next_line <- ifelse(i + 1 <= length(txt_lines), str_trim(txt_lines[i + 1]), NA)
+    
+    # Extract player’s state (first two uppercase letters in the next line)
+    player_state <- ifelse(!is.na(next_line), str_extract(next_line, "^[A-Z]{2}"), NA)
+    
+    # Extract player's pre-tournament rating (number following "R: ")
+    pre_rating <- as.numeric(str_extract(next_line, "(?<=R: )\\d+"))
+    
+    # Extract opponent numbers (players the current player competed against in each round)
+    opponent_nums <- as.numeric(unlist(str_extract_all(line, "(?<=W |L |D )\\d+")))
+    
+    # Ensure opponent_nums is not empty; set to NA if no opponents found
+    if (length(opponent_nums) == 0) {
+      opponent_nums <- NA
+    }
+    
+    # Only store player data if required fields (name, rating, and total points) exist
+    if (!is.na(player_name) && !is.na(pre_rating) && !is.na(total_points)) {
+      players[[length(players) + 1]] <- data.frame(
+        Name = player_name,        # Player's name
+        State = player_state,      # Player's state
+        TotalPoints = total_points, # Total points scored
+        PreRating = pre_rating,    # Player's pre-tournament rating
+        Opponents = list(opponent_nums)  # List of opponent IDs for each round
+      )
+    }
+    
+    i <- i + 2  # Move to the next player's record (skip one extra line for state/rating)
+  } else {
+    i <- i + 1  # Continue to the next line if no match is found
+  }
+  
+  
+  
+  
+  
+}
+
+# Convert the list of players into a data frame
+players_df <- bind_rows(players)
+
+# Display the first few rows of the extracted data
+head(players_df)
+
+
+
+
+
+```
+
+
+
+```{r}
+
+#Professor I really had trouble getting the ratings for the opponents, here is my code showcasing my attempt
+
+
+#opponent_nums <- as.numeric(unlist(str_extract_all(line, "(?<=W |L |D )\\d+")))
+
+# Create a lookup table for Pre-Ratings
+#rating_lookup <- players_df %>%
+#  select(PlayerID, PreRating)
+
+# Function to compute average opponent pre-rating
+#calculate_avg_opponent_rating <- function(rounds) {
+  # Convert round data to numeric
+#  opponents <- as.numeric(rounds)
+#  opponents <- opponents[!is.na(opponents)]  # Remove NA values
+  
+  # Get the pre-ratings of the opponents using PlayerID
+#  valid_ratings <- rating_lookup$PreRating[rating_lookup$PlayerID %in% opponents]
+  
+#  # Compute and return the mean of opponent pre-ratings
+ # if (length(valid_ratings) == 0) {
+  #  return(NA)
+#  }
+#  return(mean(valid_ratings, na.rm = TRUE))
+#}
+
+# Apply function to calculate the average opponent pre-rating
+#players_df <- players_df %>%
+#  rowwise() %>%
+#  mutate(AvgOpponentPreRating = calculate_avg_opponent_rating(c_across(Round1:Round7))) %>%
+#  ungroup()
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
