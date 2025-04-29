@@ -1,0 +1,53 @@
+
+
+Netflix is a popular streaming service that recommends TV shows to millions of users.  
+Their recommendation system is a big reason why people stay on Netflix and keep watching.
+
+
+# How Netflix’s Recommendation System Works
+
+Netflix uses a mix of different methods to recommend shows:
+
+- **Collaborative Filtering**: Suggests shows based on what similar users have liked.
+- **Content-Based Filtering**: Looks at the show’s genre, & actors
+- **Behavioral Data**: Tracks what you watch, search for and how long you watch.
+
+
+Netflix shows recommendations in sections like:
+- "Because you watched..."
+- "Top Picks for You"
+
+
+# Scenario Design Analysis
+
+Here’s the Scenario Design, answering three questions:
+
+| **Who are the users?** | Millions of people who pay to watch Netflix.
+| **What are the users trying to do?** | Keep people watching so they don’t cancel their subscription.
+| **How does the site help them?** Shows them stuff that matches their tastes and helps them find new favorites. 
+
+## Should We Do Scenario Design for Both? Yes!
+Netflix’s goal (keep users engaged) and the user’s goal (find something good) are similar but not exactly the same.  
+
+
+# Ideas to Improve Netflix’s Recommendations
+Here are a few ways Netflix could get even better:
+
+- **Mix in More Surprises**: Show some titles outside a user’s usual picks to help them discover new things.
+- **Explain Why It’s Recommended**: Show messages like “Because you liked" more clearly.
+- **Mood Filters**: Let people pick a mood like "funny," or "serious,"
+- Better Feedback Options: Let users say what they want more or less of, not just thumbs up or thumbs down.
+- Social Recommendations: Let people see (if they want) what’s popular with friends.
+
+# References
+
+1. Gómez-Uribe, C. A., & Hunt, N. (2015). *The Netflix Recommender System: Algorithms, Business Value, and Innovation.* ACM Transactions on Management Information Systems. [Link](https://dl.acm.org/doi/10.1145/2843948)
+
+2. Netflix Research. *Personalization and Recommender Systems.* [Link](https://research.netflix.com/research-area/recommendations)
+
+3. Netflix Tech Blog. *System Architectures for Personalization and Recommendation.* [Link](https://netflixtechblog.com/system-architectures-for-personalization-and-recommendation-e081aa94b5d8)
+
+4. Bhattacharya, M., & Lamkhede, S. (2022). *Augmenting Netflix Search with In-Session Adapted Recommendations.* [Link](https://arxiv.org/abs/2206.02254)
+
+---
+
